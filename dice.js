@@ -2,7 +2,7 @@
 const gridContainer = document.getElementById("grid-container");
 
 // create an array of max values for each dice
-const diceMaxValues = Array.from({length: 100}, () => Math.floor(Math.random() * 99) + 2);
+var diceMaxValues = Array.from({length: 100}, () => Math.floor(Math.random() * 99) + 2);
 
 for (let i = 0; i < 10; i++) {
   for (let j = 0; j < 10; j++) {
@@ -54,13 +54,19 @@ rerollButton.textContent = 'RE-ROLL ALL';
 gridContainer.appendChild(rerollButton);
 
 rerollButton.addEventListener('click', function() {
+
+
   diceElements.forEach((dice, i) => {
     // use the max value for the current dice from the diceMaxValues array
     let newDiceValue = Math.floor(Math.random() * diceMaxValues[i]) + 1;
     dice.textContent = newDiceValue;
+
+  });
+
     let updatedScore = calcScore();
     scoreElement.textContent = "Score: " + updatedScore;
-  });
+
+
 });
 
 rerollButton.classList.add('reroll-button');
@@ -99,15 +105,22 @@ resetButton.textContent = 'RESET MAX VALUE AND RE-ROLL';
 gridContainer.appendChild(resetButton);
 
 resetButton.addEventListener('click', function() {
-  const newDiceMaxValues = Array.from({length: 100}, () => Math.floor(Math.random() * 99) + 2);
+  
+ 
+
+const newDiceMaxValues = Array.from({length: 100}, () => Math.floor(Math.random() * 99) + 2);
+  diceMaxValues = newDiceMaxValues;
+
   diceElements.forEach((dice, i) => {
-    // use the new max value for the current dice from the newDiceMaxValues array
-    let newDiceValue = Math.floor(Math.random() * newDiceMaxValues[i]) + 1;
+    // use the max value for the current dice from the diceMaxValues array
+    let newDiceValue = Math.floor(Math.random() * diceMaxValues[i]) + 1;
     dice.textContent = newDiceValue;
   });
+  
   let updatedScore = calcScore();
   scoreElement.textContent = "Score: " + updatedScore;
+  
+ 
 });
-
 
 
