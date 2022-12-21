@@ -94,5 +94,20 @@ function calcScore() {
   return score;
 }
 
+const resetButton = document.createElement('button');
+resetButton.textContent = 'RESET MAX VALUE AND RE-ROLL';
+gridContainer.appendChild(resetButton);
+
+resetButton.addEventListener('click', function() {
+  const newDiceMaxValues = Array.from({length: 100}, () => Math.floor(Math.random() * 99) + 2);
+  diceElements.forEach((dice, i) => {
+    // use the new max value for the current dice from the newDiceMaxValues array
+    let newDiceValue = Math.floor(Math.random() * newDiceMaxValues[i]) + 1;
+    dice.textContent = newDiceValue;
+  });
+  let updatedScore = calcScore();
+  scoreElement.textContent = "Score: " + updatedScore;
+});
+
 
 
