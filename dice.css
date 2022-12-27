@@ -1,12 +1,12 @@
 .dice {
   display: inline-block;
-  width: 50px;
-  height: 50px;
+  width: 75px;
+  height: 75px;
   border: 1px solid black;
   text-align: center;
   vertical-align: middle;
-  line-height: 50px;
-  font-size: 20px;
+  line-height: 72px;
+  font-size: 30px;
   font-weight: bold;
   margin: 3px;
   background-color: lightgrey;
@@ -42,18 +42,30 @@
 #grid-container {
   display: block;  /* make the container a block-level element */
   margin: auto;  /* center the container horizontally */
-  width: 585px;  /* specify a width for the container (adjust as needed) */
+  width: 430px;  /* specify a width for the container (adjust as needed) */
 }
 
 .reroll-button {
   margin-top: 10px;
-  width: 120px;
+  width: 150px;
   height: 30px;
   font-size: 12px;
 }
 
-.score {
+.reset-button {
   margin-top: 10px;
+  margin-left: 10px;
+  width: 250px;
+  height: 30px;
+  font-size: 12px;
+}
+
+.counter {
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+.score {
   margin-bottom: 10px;
   font-size: 24px;
   font-weight: bold;
