@@ -5,7 +5,7 @@ var gridContainer = document.getElementById("grid-container");
 var diceMaxValues = Array.from({length: 25}, () => Math.floor(Math.random() * 99) + 2);
 
 // initialize click counter
-var clickCounter = 100;
+var clickCounter = 50;
 
 // set a game over flag
 var gameoverFlag = 0;
