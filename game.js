@@ -6,14 +6,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // WORD LIST STUFF ---------------------------------------------------    
     
-fetch('words.txt')
+fetch('https://cors-anywhere.herokuapp.com/https://github.com/frank-o-lantz/frank-o-lantz.github.io/blob/main/words.txt')
     .then(response => response.text())
     .then(text => {
         const wordList = new Set(text.split('\n').map(word => word.trim()));
         // Now you have your words in the wordList set
-        // You can continue with the rest of your game initialization here
     })
     .catch(error => console.error('Error loading word list:', error));
+
 
 //WORD SELECTION -------------------------------------------------------
 
