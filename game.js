@@ -4,6 +4,73 @@ document.addEventListener('DOMContentLoaded', () => {
     let score = 0; // Global score variable
     const letterDistribution = 'AAAAAAAAABBCCDDDDEEEEEEEEEEEEFFGGGHHIIIIIIIIIJKLLLLMMNNNNNNOOOOOOOOPPQRRRRRRSSSSTTTTTTUUUUVVWWXYYZ';
 
+// WORD LIST STUFF ---------------------------------------------------    
+    
+fetch('words.txt')
+    .then(response => response.text())
+    .then(text => {
+        const wordList = new Set(text.split('\n').map(word => word.trim()));
+        // Now you have your words in the wordList set
+        // You can continue with the rest of your game initialization here
+    })
+    .catch(error => console.error('Error loading word list:', error));
+
+//WORD SELECTION -------------------------------------------------------
+
+function highlightValidWords(gridSize = 10) {
+    // Scan each row
+    for (let row = 0; row < gridSize; row++) {
+        checkAndHighlightWords(getRowLetters(row, gridSize), row, true, gridSize);
+    }
+
+    // Scan each column
+    for (let col = 0; col < gridSize; col++) {
+        checkAndHighlightWords(getColumnLetters(col, gridSize), col, false, gridSize);
+    }
+}
+
+function getRowLetters(row, gridSize) {
+    let letters = '';
+    for (let col = 0; col < gridSize; col++) {
+        let cell = document.getElementById(`cell-${row * gridSize + col}`);
+        letters += cell.textContent || ' ';
+    }
+    return letters;
+}
+
+function getColumnLetters(col, gridSize) {
+    let letters = '';
+    for (let row = 0; row < gridSize; row++) {
+        let cell = document.getElementById(`cell-${row * gridSize + col}`);
+        letters += cell.textContent || ' ';
+    }
+    return letters;
+}
+
+function checkAndHighlightWords(line, offset, isRow, gridSize) {
+    for (let start = 0; start < line.length; start++) {
+        for (let end = start + 3; end <= line.length; end++) {
+            let word = line.substring(start, end);
+            if (wordList.has(word)) {
+                highlightWord(start, end, offset, isRow, gridSize);
+            }
+        }
+    }
+}
+
+function highlightWord(start, end, offset, isRow, gridSize) {
+    for (let i = start; i < end; i++) {
+        let cellIndex = isRow ? offset * gridSize + i : i * gridSize + offset;
+        let cell = document.getElementById(`cell-${cellIndex}`);
+        cell.classList.add('word-selected');
+    }
+}
+
+    
+    
+    
+//----------------------------------------------------------------------    
+    
 
     // Create the 10x10 grid
     for (let i = 0; i < 100; i++) {
@@ -23,8 +90,12 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             i--; // If the cell is already filled, repeat this iteration
         }
+        
     }
 
+ highlightValidWords();   
+    
+    
     // Handle cell click
     function cellClicked(index, event) {
         let cell = document.getElementById(`cell-${index}`);
@@ -62,6 +133,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 selectedTile.classList.remove('selected');
                 selectedTile = null;
                 addRandomTiles(4); // Add new random tiles
+                highlightValidWords(); // check for valid words   
+        
             }
         }
         
@@ -135,6 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
         emptyCells.splice(randomIndex, 1); // Remove the filled cell from the empty list
         
     }
+        
 }
 
     function removeConnectedTilesAndCalculateScore(startIndex) {
