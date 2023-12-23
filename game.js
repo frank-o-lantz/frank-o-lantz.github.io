@@ -6,11 +6,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // WORD LIST STUFF ---------------------------------------------------    
     
+let wordList = new Set(); // Define wordList in the global scope
+
 fetch('https://raw.githubusercontent.com/frank-o-lantz/frank-o-lantz.github.io/main/words.txt')
     .then(response => response.text())
     .then(text => {
-        const wordList = new Set(text.split('\n').map(word => word.trim()));
+        text.split('\n').map(word => wordList.add(word.trim()));
         // Now you have your words in the wordList set
+        highlightValidWords(); // Call this here to ensure wordList is loaded
     })
     .catch(error => console.error('Error loading word list:', error));
 
