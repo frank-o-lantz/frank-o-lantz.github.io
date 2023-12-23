@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // WORD LIST STUFF ---------------------------------------------------    
     
-fetch('https://corsproxy.io/?/https://github.com/frank-o-lantz/frank-o-lantz.github.io/blob/main/words.txt')
+fetch('http://crossorigin.me/https://github.com/frank-o-lantz/frank-o-lantz.github.io/blob/main/words.txt')
     .then(response => response.text())
     .then(text => {
         const wordList = new Set(text.split('\n').map(word => word.trim()));
