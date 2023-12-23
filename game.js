@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // WORD LIST STUFF ---------------------------------------------------    
     
-fetch('https://crossorigin.me/https://github.com/frank-o-lantz/frank-o-lantz.github.io/blob/main/words.txt')
+fetch('https://raw.githubusercontent.com/frank-o-lantz/frank-o-lantz.github.io/main/words.txt')
     .then(response => response.text())
     .then(text => {
         const wordList = new Set(text.split('\n').map(word => word.trim()));
