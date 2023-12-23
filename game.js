@@ -53,7 +53,7 @@ function getColumnLetters(col, gridSize) {
 function checkAndHighlightWords(line, offset, isRow, gridSize) {
     for (let start = 0; start < line.length; start++) {
         for (let end = start + 3; end <= line.length; end++) {
-            let word = line.substring(start, end);
+            let word = line.substring(start, end).toLowerCase(); // Convert to lowercase
             if (wordList.has(word)) {
                 highlightWord(start, end, offset, isRow, gridSize);
             }
@@ -99,57 +99,61 @@ function highlightWord(start, end, offset, isRow, gridSize) {
  highlightValidWords();   
     
     
-    // Handle cell click
+    // Handle cell click------------------------------------------------------
+    
     function cellClicked(index, event) {
-        let cell = document.getElementById(`cell-${index}`);
-        
-        // CTRL+click to toggle red highlight
-        if (event.ctrlKey && cell.textContent) {
-            cell.classList.toggle('word-selected');
-            return;
-        }
-        
-        // Logic for removing and scoring red-highlighted tiles
-        // This should be checked before the regular tile selection logic
-        if (cell.classList.contains('word-selected')) {
-        let score = removeConnectedTilesAndCalculateScore(index);
-        console.log("Score increased by:", score);
-        return; // Return early to avoid applying selection highlight
-    }
-        
-        if (cell.textContent) {
-            if (selectedTile === cell) {
-                cell.classList.remove('selected');
-                selectedTile = null;
-            } else {
-                if (selectedTile) selectedTile.classList.remove('selected');
-                selectedTile = cell;
-                cell.classList.add('selected');
-            }
-            
-        } else if (selectedTile) {
-            // Check if a path is available
-            let grid = document.querySelectorAll('.cell');
-            if (isPathAvailable(grid, parseInt(selectedTile.id.split('-')[1]), index)) {
-                cell.textContent = selectedTile.textContent;
-                selectedTile.textContent = '';
-                selectedTile.classList.remove('selected');
-                selectedTile = null;
-                addRandomTiles(4); // Add new random tiles
-                highlightValidWords(); // check for valid words   
-        
-            }
-        }
-        
-        if (cell.classList.contains('word-selected')) {
-        let score = removeConnectedTilesAndCalculateScore(index);
-        // TODO: Update the actual score display
-        console.log("Score increased by:", score);
-    }
-        
-        
+    let cell = document.getElementById(`cell-${index}`);
+
+    // CTRL+click to toggle red highlight
+    if (event.ctrlKey && cell.textContent) {
+        cell.classList.toggle('word-selected');
+        return;
     }
 
+    // Check if the click is for scoring a word
+    if (cell.classList.contains('word-selected')) {
+        let scoreIncrease = removeConnectedTilesAndCalculateScore(index);
+        console.log("Score increased by:", scoreIncrease);
+        highlightValidWords(); // Update word highlights after scoring
+        return;
+    }
+
+    // Click on the currently selected tile to deselect it
+    if (selectedTile && selectedTile === cell) {
+        selectedTile.classList.remove('selected');
+        selectedTile = null;
+        return;
+    }    
+        
+        
+    // Regular click logic for tile selection and movement
+    if (cell.textContent && !selectedTile) {
+        if (selectedTile === cell) {
+            cell.classList.remove('selected');
+            selectedTile = null;
+        } else {
+            selectedTile = cell;
+            cell.classList.add('selected');
+        }
+    } else if (selectedTile) {
+        // Check if a path is available
+        let grid = document.querySelectorAll('.cell');
+        if (isPathAvailable(grid, parseInt(selectedTile.id.split('-')[1]), index)) {
+            cell.textContent = selectedTile.textContent;
+            selectedTile.textContent = '';
+            selectedTile.classList.remove('selected');
+            selectedTile = null;
+            addRandomTiles(4); // Add new random tiles
+            highlightValidWords(); // check for valid words
+
+            // Clear selectedTile to prevent further actions on it
+            selectedTile = null;
+        }
+    }
+}
+
+
+    //------------------------------------------------------------
     
     function isPathAvailable(grid, start, target) {
         const rows = 10;
