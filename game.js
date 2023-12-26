@@ -2,8 +2,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const gridElement = document.getElementById('grid');
     let selectedTile = null;
     let score = 0; // Global score variable
-    let newTileAmount = 3;
+    let newTileAmount = 1;
     let newTileAmountCounter = 0;
+    let newTileIncreaseFreq = 15;
+    let minWord = 4;
     const letterDistribution = 'AAAAAAAAABBCCDDDDEEEEEEEEEEEEFFGGGHHIIIIIIIIIJKLLLLMMNNNNNNOOOOOOOOPPQRRRRRRSSSSTTTTTTUUUUVVWWXYYZ';
 
 // WORD HIGHLIGHT COLORS ---------------------------------------------
@@ -78,7 +80,7 @@ function getColumnLetters(col, gridSize) {
 
 function checkAndHighlightWords(line, offset, isRow, gridSize) {
     for (let start = 0; start < line.length; start++) {
-        for (let end = start + 3; end <= line.length; end++) {
+        for (let end = start + minWord; end <= line.length; end++) {
             let word = line.substring(start, end).toLowerCase(); // Convert to lowercase
             if (wordList.has(word)) {
                 highlightWord(start, end, offset, isRow, gridSize);
@@ -187,7 +189,7 @@ function highlightWord(start, end, offset, isRow, gridSize) {
             selectedTile = null;
             addRandomTiles(newTileAmount); // Add new random tiles
             newTileAmountCounter++;
-            if (newTileAmountCounter >= 10) {
+            if (newTileAmountCounter >= newTileIncreaseFreq) {
                 newTileAmount++;
                 newTileAmountCounter = 0;
             }
