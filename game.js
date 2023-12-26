@@ -24,6 +24,9 @@ const colors = [
     'rgba(45, 85, 120, 0.5)',
 ];   
     
+let wordColors = {}; // Object to store word positions and their assigned colors
+    
+    
     
 // WORD LIST STUFF ---------------------------------------------------    
     
@@ -85,16 +88,25 @@ function checkAndHighlightWords(line, offset, isRow, gridSize) {
 let currentColorIndex = 0    
     
 function highlightWord(start, end, offset, isRow, gridSize) {
-    let color = colors[currentColorIndex % colors.length];
-    currentColorIndex++;
+    const wordKey = `${start}-${end}-${offset}-${isRow}`;
+    let color;
 
+    if (wordColors[wordKey]) {
+        color = wordColors[wordKey]; // Use existing color
+    } else {
+        color = colors[currentColorIndex % colors.length];
+        currentColorIndex++;
+        wordColors[wordKey] = color; // Store color for this word
+    }
 
     for (let i = start; i < end; i++) {
         let cellIndex = isRow ? offset * gridSize + i : i * gridSize + offset;
         let cell = document.getElementById(`cell-${cellIndex}`);
-        cell.classList.add('word-selected');
+        cell.style.backgroundColor = color;
+        cell.classList.add('word-selected'); // Add the 'word-selected' class
     }
 }
+
 
     
     
@@ -139,6 +151,7 @@ function highlightWord(start, end, offset, isRow, gridSize) {
 
     // Check if the click is for scoring a word
     if (cell.classList.contains('word-selected')) {
+        console.log("Highlighted Word Clicked");
         let scoreIncrease = removeConnectedTilesAndCalculateScore(index);
         console.log("Score increased by:", scoreIncrease);
         highlightValidWords(); // Update word highlights after scoring
@@ -247,18 +260,23 @@ function highlightWord(start, end, offset, isRow, gridSize) {
 
     function removeConnectedTilesAndCalculateScore(startIndex) {
     let tilesToRemove = getConnectedWordTiles(startIndex);
-    let scoreIncrease = tilesToRemove.length ** 2; // Score = number of tiles squared
+    let scoreIncrease = tilesToRemove.length ** 2;
 
     tilesToRemove.forEach(index => {
         let cell = document.getElementById(`cell-${index}`);
-        cell.textContent = '';
-        cell.classList.remove('word-selected');
+        cell.textContent = ''; // Remove the letter
+        cell.style.backgroundColor = ''; // Reset background color
+        cell.classList.remove('word-selected'); // Remove the highlight class
+
+        // Remove the word from the wordColors map if necessary
+        // ...
     });
 
     score += scoreIncrease;
-    updateScoreDisplay();    
+    updateScoreDisplay();
     return scoreIncrease;
 }
+
 
     function updateScoreDisplay() {
     document.getElementById('score').textContent = `Score: ${score}`;
