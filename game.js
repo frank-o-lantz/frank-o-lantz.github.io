@@ -4,6 +4,27 @@ document.addEventListener('DOMContentLoaded', () => {
     let score = 0; // Global score variable
     const letterDistribution = 'AAAAAAAAABBCCDDDDEEEEEEEEEEEEFFGGGHHIIIIIIIIIJKLLLLMMNNNNNNOOOOOOOOPPQRRRRRRSSSSTTTTTTUUUUVVWWXYYZ';
 
+// WORD HIGHLIGHT COLORS ---------------------------------------------
+    
+const colors = [
+    'rgba(255, 0, 0, 0.5)', // Red with 50% opacity
+    'rgba(0, 255, 0, 0.5)', // Green with 50% opacity
+    'rgba(0, 0, 255, 0.5)', // Blue with 50% opacity
+    'rgba(127, 127, 0, 0.5)',
+    'rgba(127, 0, 127, 0.5)',
+    'rgba(0, 127, 127, 0.5)',
+    'rgba(150, 60, 50, 0.5)',
+    'rgba(60, 150, 50, 0.5)',
+    'rgba(60, 50, 150, 0.5)',
+    'rgba(120, 85, 45, 0.5)',
+    'rgba(120, 45, 85, 0.5)',
+    'rgba(85, 120, 45, 0.5)',
+    'rgba(45, 120, 85, 0.5)',
+    'rgba(85, 45, 120, 0.5)',
+    'rgba(45, 85, 120, 0.5)',
+];   
+    
+    
 // WORD LIST STUFF ---------------------------------------------------    
     
 let wordList = new Set(); // Define wordList in the global scope
@@ -61,7 +82,13 @@ function checkAndHighlightWords(line, offset, isRow, gridSize) {
     }
 }
 
+let currentColorIndex = 0    
+    
 function highlightWord(start, end, offset, isRow, gridSize) {
+    let color = colors[currentColorIndex % colors.length];
+    currentColorIndex++;
+
+
     for (let i = start; i < end; i++) {
         let cellIndex = isRow ? offset * gridSize + i : i * gridSize + offset;
         let cell = document.getElementById(`cell-${cellIndex}`);
