@@ -2,6 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const gridElement = document.getElementById('grid');
     let selectedTile = null;
     let score = 0; // Global score variable
+    let newTileAmount = 3;
+    let newTileAmountCounter = 0;
     const letterDistribution = 'AAAAAAAAABBCCDDDDEEEEEEEEEEEEFFGGGHHIIIIIIIIIJKLLLLMMNNNNNNOOOOOOOOPPQRRRRRRSSSSTTTTTTUUUUVVWWXYYZ';
 
 // WORD HIGHLIGHT COLORS ---------------------------------------------
@@ -183,7 +185,12 @@ function highlightWord(start, end, offset, isRow, gridSize) {
             selectedTile.textContent = '';
             selectedTile.classList.remove('selected');
             selectedTile = null;
-            addRandomTiles(4); // Add new random tiles
+            addRandomTiles(newTileAmount); // Add new random tiles
+            newTileAmountCounter++;
+            if (newTileAmountCounter >= 10) {
+                newTileAmount++;
+                newTileAmountCounter = 0;
+            }
             highlightValidWords(); // check for valid words
 
             // Clear selectedTile to prevent further actions on it
