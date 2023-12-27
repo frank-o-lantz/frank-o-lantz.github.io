@@ -6,6 +6,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let newTileAmountCounter = 0;
     let newTileIncreaseFreq = 15;
     let minWord = 4;
+    let wordCount = 0;
+    let prevWordCount = 0;
+    let garbageFlag = 1;
+
     const letterDistribution = 'AAAAAAAAABBCCDDDDEEEEEEEEEEEEFFGGGHHIIIIIIIIIJKLLLLMMNNNNNNOOOOOOOOPPQRRRRRRSSSSTTTTTTUUUUVVWWXYYZ';
 
 // WORD HIGHLIGHT COLORS ---------------------------------------------
@@ -49,15 +53,33 @@ fetch('https://raw.githubusercontent.com/frank-o-lantz/frank-o-lantz.github.io/m
 //WORD SELECTION -------------------------------------------------------
 
 function highlightValidWords(gridSize = 10) {
+
+    console.log("checking for words");
+    console.log("setting prevWordCount to wordCount");
+    prevWordCount = wordCount;
+    console.log("setting wordCount to zero");
+    wordCount = 0;
+    
     // Scan each row
     for (let row = 0; row < gridSize; row++) {
         checkAndHighlightWords(getRowLetters(row, gridSize), row, true, gridSize);
-    }
+        }
 
     // Scan each column
     for (let col = 0; col < gridSize; col++) {
         checkAndHighlightWords(getColumnLetters(col, gridSize), col, false, gridSize);
-    }
+        }
+    
+    if (wordCount > prevWordCount) { // check to see if move created new word
+        garbageFlag = 0;
+        } else {
+        garbageFlag = 1;
+        }
+    
+    console.log("new word count ", wordCount);
+    console.log("previous word count ", prevWordCount);
+    console.log("garbageFlag =", garbageFlag);
+    
 }
 
 function getRowLetters(row, gridSize) {
@@ -79,15 +101,21 @@ function getColumnLetters(col, gridSize) {
 }
 
 function checkAndHighlightWords(line, offset, isRow, gridSize) {
+
     for (let start = 0; start < line.length; start++) {
         for (let end = start + minWord; end <= line.length; end++) {
             let word = line.substring(start, end).toLowerCase(); // Convert to lowercase
             if (wordList.has(word)) {
                 highlightWord(start, end, offset, isRow, gridSize);
+                console.log("word found - ", word);
+                wordCount++;
+
             }
         }
-    }
+    }     
 }
+    
+  
 
 let currentColorIndex = 0    
     
@@ -145,6 +173,7 @@ function highlightWord(start, end, offset, isRow, gridSize) {
     // Handle cell click------------------------------------------------------
     
     function cellClicked(index, event) {
+    console.log("click");    
     let cell = document.getElementById(`cell-${index}`);
 
     // CTRL+click to toggle red highlight
@@ -187,14 +216,18 @@ function highlightWord(start, end, offset, isRow, gridSize) {
             selectedTile.textContent = '';
             selectedTile.classList.remove('selected');
             selectedTile = null;
+            
+            highlightValidWords(); // check for valid words
+            
+            if (garbageFlag > 0) {
             addRandomTiles(newTileAmount); // Add new random tiles
             newTileAmountCounter++;
             if (newTileAmountCounter >= newTileIncreaseFreq) {
                 newTileAmount++;
                 newTileAmountCounter = 0;
+                }
             }
-            highlightValidWords(); // check for valid words
-
+            
             // Clear selectedTile to prevent further actions on it
             selectedTile = null;
         }
