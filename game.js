@@ -52,7 +52,7 @@ fetch('https://raw.githubusercontent.com/frank-o-lantz/frank-o-lantz.github.io/m
 
 //WORD SELECTION -------------------------------------------------------
 
-function highlightValidWords(gridSize = 10) {
+function highlightValidWords(gridSize = 7) {
 
     console.log("checking for words");
     console.log("setting prevWordCount to wordCount");
@@ -146,8 +146,8 @@ function highlightWord(start, end, offset, isRow, gridSize) {
 //----------------------------------------------------------------------    
     
 
-    // Create the 10x10 grid
-    for (let i = 0; i < 100; i++) {
+    // Create the grid
+    for (let i = 0; i < 49; i++) {
         let cell = document.createElement('div');
         cell.classList.add('cell');
         cell.id = `cell-${i}`;
@@ -156,8 +156,8 @@ function highlightWord(start, end, offset, isRow, gridSize) {
     }
 
     // Place some random letters
-    for (let i = 0; i < 30; i++) {
-        let randomCellIndex = Math.floor(Math.random() * 100);
+    for (let i = 0; i < 20; i++) {
+        let randomCellIndex = Math.floor(Math.random() * 49);
         let randomCell = document.getElementById(`cell-${randomCellIndex}`);
         if (!randomCell.textContent) {
             randomCell.textContent = getRandomLetter();
@@ -226,6 +226,7 @@ function highlightWord(start, end, offset, isRow, gridSize) {
                 newTileAmount++;
                 newTileAmountCounter = 0;
                 }
+            highlightValidWords();    
             }
             
             // Clear selectedTile to prevent further actions on it
@@ -238,8 +239,8 @@ function highlightWord(start, end, offset, isRow, gridSize) {
     //------------------------------------------------------------
     
     function isPathAvailable(grid, start, target) {
-        const rows = 10;
-        const cols = 10;
+        const rows = 7;
+        const cols = 7;
         const visited = new Set();
         const queue = [start];
 
@@ -327,8 +328,8 @@ function highlightWord(start, end, offset, isRow, gridSize) {
     
     function getConnectedWordTiles(startIndex) {
     const connectedTiles = [];
-    const rows = 10;
-    const cols = 10;
+    const rows = 7;
+    const cols = 7;
     const visited = new Set();
     const queue = [startIndex];
 
